@@ -65,3 +65,5 @@ pkg/controller/common/license/zz_generated.pubkey.go
 
 # ignore validator for Jenkins pipelines
 hack/pipeline-validator/validator
+
+*.iml
