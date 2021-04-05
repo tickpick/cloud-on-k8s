@@ -2,7 +2,7 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: elasticsearch-sample
+  name: elasticsearch
 spec:
   version: 7.12.0
   nodeSets:
@@ -16,8 +16,7 @@ spec:
       metadata:
         labels:
           # additional labels for pods
-          foo: bar
-      spec:
+          app: elasticsearch
         # this changes the kernel setting on the node to allow ES to use mmap
         # if you uncomment this init container you will likely also want to remove the
         # "node.store.allow_mmap: false" setting above
@@ -29,28 +28,9 @@ spec:
         ###
         # uncomment the line below if you are using a service mesh such as linkerd2 that uses service account tokens for pod identification.
         # automountServiceAccountToken: true
-        containers:
-        - name: elasticsearch
-          # specify resource limits and requests
-          resources:
-            limits:
-              memory: 4Gi
-              cpu: 1
-          env:
-          - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx2g"
-    count: 3
-  #   # request 2Gi of persistent data storage for pods in this topology element
-  #   volumeClaimTemplates:
-  #   - metadata:
-  #       name: elasticsearch-data
-  #     spec:
-  #       accessModes:
-  #       - ReadWriteOnce
-  #       resources:
-  #         requests:
-  #           storage: 2Gi
-  #       storageClassName: standard
+    count: 1
+    # request 10Gi of persistent data storage for pods in this topology element
+
   # # inject secure settings into Elasticsearch nodes from k8s secrets references
   # secureSettings:
   # - secretName: ref-to-secret
@@ -59,11 +39,11 @@ spec:
   #   entries:
   #   - key: value1
   #     path: newkey # project a key to a specific path (optional)
-  # http:
-  #   service:
-  #     spec:
-  #       # expose this cluster Service with a LoadBalancer
-  #       type: LoadBalancer
+  http:
+    service:
+      spec:
+        # expose this cluster Service with a LoadBalancer
+        type: LoadBalancer
   #   tls:
   #     selfSignedCertificate:
   #       # add a list of SANs into the self-signed HTTP certificate
