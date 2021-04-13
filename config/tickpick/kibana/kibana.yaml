@@ -1,18 +1,3 @@
-# This sample sets up an Elasticsearch cluster and a Kibana instance preconfigured for that cluster
-apiVersion: elasticsearch.k8s.elastic.co/v1
-kind: Elasticsearch
-metadata:
-  name: elasticsearch
-spec:
-  version: 7.12.0
-  nodeSets:
-  - name: default
-    count: 1
-    config:
-      # This setting could have performance implications for production clusters.
-      # See: https://www.elastic.co/guide/en/cloud-on-k8s/master/k8s-virtual-memory.html
-      # node.store.allow_mmap: false
----
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
@@ -21,7 +6,7 @@ spec:
   version: 7.12.0
   count: 1
   elasticsearchRef:
-    name: "elasticsearch-sample"
+    name: "elasticsearch"
   secureSettings:
   - secretName: kibana-saved-objects-encrypted-key
   http:
